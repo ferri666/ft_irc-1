@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vpeinado <victor@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ffons-ti <ffons-ti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 15:53:24 by vpeinado          #+#    #+#             */
-/*   Updated: 2024/10/16 14:23:30 by vpeinado         ###   ########.fr       */
+/*   Updated: 2024/10/16 18:23:11 by ffons-ti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -372,7 +372,14 @@ void Server::deleteClientPollFd(int fd)
 
 void Server::deleteFromAllChannels(int fd)
 {
-    (void)fd;
+    std::map<std::string, Channel *> canales = this->getChannels();
+    for(size_t i = 0; i < canales.size(); i++)
+    {
+        if (canales[i].isClientInChannel(fd))
+            canales[i].removeClient(fd);
+        if (canales[i].isClientAdmin(fd))
+            canales[i].removeAdmin(fd);
+    }
 }
 
 /******************************************************************************
